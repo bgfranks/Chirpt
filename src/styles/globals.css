@@ -8,15 +8,24 @@ body {
 }
 
 @layer components {
+  /* utility classes */
+  .transition-durration {
+    @apply ease-in-out duration-300;
+  }
+
   .input {
-    @apply w-[50%] bg-black h-12   pl-5 text-light-gray rounded-md;
+    @apply w-[50%] bg-black h-12 pl-5 text-light-gray rounded-md;
   }
 
   .btn {
-    @apply w-[50%] bg-blue-500 hover:bg-blue-700 rounded-md py-2 text-lg my-5;
+    @apply w-[50%] bg-blue-500 hover:bg-blue-700 rounded-md py-2 text-lg my-5 transition-durration;
   }
 
   .logo {
-    @apply bg-gradient-to-r from-purple-700 to-blue-700 bg-clip-text text-transparent font-bold text-5xl;
+    @apply bg-gradient-to-r from-purple-700 to-blue-700 bg-clip-text text-transparent font-bold text-5xl hover:animate-pulse;
+  }
+
+  .link {
+    @apply text-blue-500 hover:text-blue-700 transition-durration;
   }
 }
