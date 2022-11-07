@@ -8,4 +8,15 @@ body {
 }
 
 @layer components {
+  .input {
+    @apply w-[50%] bg-black h-12   pl-5 text-light-gray rounded-md;
+  }
+
+  .btn {
+    @apply w-[50%] bg-blue-500 hover:bg-blue-700 rounded-md py-2 text-lg my-5;
+  }
+
+  .logo {
+    @apply bg-gradient-to-r from-purple-700 to-blue-700 bg-clip-text text-transparent font-bold text-5xl;
+  }
 }
