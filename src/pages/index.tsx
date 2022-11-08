@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Signup from '../components/signup'
 
 export default function Home() {
   return (
@@ -10,9 +9,7 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <main>
-        <Signup />
-      </main>
+      <main>Hiya</main>
     </div>
   )
 }
