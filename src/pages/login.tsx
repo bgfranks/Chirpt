@@ -1,6 +1,32 @@
+import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+
+// firebase
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../utils/firebase'
+import toast from 'react-hot-toast'
 
 export default function Login() {
+  const router = useRouter()
+
+  // state
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  // handle login form submit
+  const handleSubmit = async (e: any) => {
+    e.preventDefault()
+
+    try {
+      // log in with email and pass then route to home on success
+      await signInWithEmailAndPassword(auth, email, password)
+      router.push('/')
+    } catch (error) {
+      toast.error('Invalid login credentials. Please try again!')
+    }
+  }
+
   return (
     <div className='flex flex-col items-center gap-8 my-10'>
       <h1 className='text-4xl'>
@@ -8,10 +34,27 @@ export default function Login() {
       </h1>
       <div className='bg-dark-gray w-[60%] rounded-xl py-10'>
         <h2 className='text-center text-2xl pb-5'>Login</h2>
-        <form className='flex flex-col items-center gap-2'>
-          <input type='email' placeholder='Email' className='input' />
-          <input type='password' placeholder='Password' className='input' />
-          <button className='btn'>Sign Up</button>
+        <form
+          className='flex flex-col items-center gap-2'
+          onSubmit={handleSubmit}
+        >
+          <input
+            type='email'
+            placeholder='Email'
+            className='input'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type='password'
+            placeholder='Password'
+            className='input'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button type='submit' className='btn'>
+            Login
+          </button>
         </form>
         <p className='text-center'>
           New to Chirpt?{' '}

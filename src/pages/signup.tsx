@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import toast from 'react-hot-toast'
 
 // firebase
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
@@ -79,8 +80,8 @@ export default function Signup() {
           }
         })
       })
-    } catch (error) {
-      console.log(error)
+    } catch (error: any) {
+      toast.error('Email already in use. Please try again!')
       setErr(true)
       setIsLoading(false)
     }
