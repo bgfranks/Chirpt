@@ -1,28 +1,89 @@
 import React, { useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+
+// firebase
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { setDoc, doc } from 'firebase/firestore'
+import { auth, storage, db } from '../utils/firebase'
 
 // icons
 import { ImFilePicture } from 'react-icons/im'
 import { BsCheckLg } from 'react-icons/bs'
-import Link from 'next/link'
 
 export default function Signup() {
-  const [uploadedImg, setUploadedImg] = useState('')
+  // router
+  const router = useRouter()
+  // state
+  const [uploadedImg, setUploadedImg] = useState()
   const [imgIsUploaded, setImgIsUploaded] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [err, setErr] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleFileChange = (e: any) => {
-    console.log(e.target.files[0].name)
+    // set the image upload name to show in the ui
     setUploadedImg(e.target.files[0].name)
+    // sets the image upload to true to show a checkmark in the ui
     setImgIsUploaded(true)
   }
 
   // console.log(supabase)
 
   const handleSubmit = async (e: any) => {
+    //grabs the file from the form
+    const file = e.target[4].value
+
+    setIsLoading(true)
     e.preventDefault()
+
+    try {
+      // signs up the user
+      const res = await createUserWithEmailAndPassword(auth, email, password)
+
+      // creates a unique name for the profile image
+      const date = new Date().getTime()
+      const storageRef = ref(storage, `${username + date}`)
+
+      // uploads the image to storage
+      await uploadBytesResumable(storageRef, file).then(() => {
+        getDownloadURL(storageRef).then(async (downloadUrl) => {
+          try {
+            // update the profile
+            await updateProfile(res.user, {
+              displayName: username,
+              photoURL: downloadUrl,
+            })
+
+            //create the user in the firestore
+            await setDoc(doc(db, 'users', res.user.uid), {
+              uid: res.user.uid,
+              username,
+              email,
+              photoUrl: downloadUrl,
+            })
+
+            // creates an empty user chats in firestore
+            await setDoc(doc(db, 'userChats', res.user.uid), {})
+
+            // reroutes back to home
+            router.push('/')
+          } catch (error) {
+            console.log(error)
+            setErr(true)
+            setIsLoading(false)
+          }
+        })
+      })
+    } catch (error) {
+      console.log(error)
+      setErr(true)
+      setIsLoading(false)
+    }
   }
 
   return (
