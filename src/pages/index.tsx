@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Signup from '../components/signup'
 
 export default function Home() {
   return (
@@ -10,7 +11,7 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1>Hiya</h1>
+        <Signup />
       </main>
     </div>
   )
