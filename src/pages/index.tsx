@@ -1,4 +1,7 @@
 import Head from 'next/head'
+import Sidebar from '../components/sidebar/Sidebar'
+
+//components
 
 export default function Home() {
   return (
@@ -9,7 +12,9 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <main>Hiya</main>
+      <main>
+        <Sidebar />
+      </main>
     </div>
   )
 }
