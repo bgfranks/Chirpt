@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
@@ -13,17 +13,21 @@ export default function Login() {
   // state
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   // handle login form submit
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setIsLoading(true)
 
     try {
       // log in with email and pass then route to home on success
       await signInWithEmailAndPassword(auth, email, password)
       router.push('/')
+      setIsLoading(false)
     } catch (error) {
       toast.error('Invalid login credentials. Please try again!')
+      setIsLoading(false)
     }
   }
 
@@ -52,7 +56,7 @@ export default function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type='submit' className='btn'>
+          <button type='submit' className='btn' disabled={isLoading}>
             Login
           </button>
         </form>

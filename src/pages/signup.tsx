@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, FormEvent } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
@@ -19,6 +19,7 @@ export default function Signup() {
   // state
   const [uploadedImg, setUploadedImg] = useState()
   const [imgIsUploaded, setImgIsUploaded] = useState(false)
+  const [file, setFile] = useState(null)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
@@ -49,6 +50,7 @@ export default function Signup() {
       // creates a unique name for the profile image
       const date = new Date().getTime()
       const storageRef = ref(storage, `${username + date}`)
+      setIsLoading(true)
 
       // uploads the image to storage
       await uploadBytesResumable(storageRef, file).then(() => {
@@ -73,6 +75,7 @@ export default function Signup() {
 
             // reroutes back to home
             router.push('/')
+            setIsLoading(false)
           } catch (error) {
             console.log(error)
             setErr(true)
@@ -80,7 +83,7 @@ export default function Signup() {
           }
         })
       })
-    } catch (error: any) {
+    } catch (error) {
       toast.error('Email already in use. Please try again!')
       setErr(true)
       setIsLoading(false)
@@ -146,7 +149,7 @@ export default function Signup() {
             )}
             {imgIsUploaded ? uploadedImg : 'Upload Profile Pic'}
           </label>
-          <button className='btn' type='submit'>
+          <button className='btn' type='submit' disabled={isLoading}>
             Sign Up
           </button>
         </form>
